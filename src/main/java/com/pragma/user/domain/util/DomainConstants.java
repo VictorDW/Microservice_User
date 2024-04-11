@@ -8,7 +8,7 @@ public class DomainConstants {
 
 	public enum Class {
 		USER,
-		ROL;
+		ROLE;
 	}
 
 	public static final String ALREADY_EXIST_MESSAGE = "This user with email %s you want to register already exists";
