@@ -35,7 +35,7 @@ public class Role {
     private String rol;
     private String description;
 
-    public Builder() {
+    private Builder() {
       //default empty constructor
     }
 
