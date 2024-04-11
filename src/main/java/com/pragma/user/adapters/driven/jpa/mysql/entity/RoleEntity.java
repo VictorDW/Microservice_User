@@ -1,6 +1,5 @@
 package com.pragma.user.adapters.driven.jpa.mysql.entity;
 
-import com.pragma.user.domain.util.role.NameRole;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,10 +17,9 @@ public class RoleEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(nullable = false)
-  @Enumerated(EnumType.STRING)
-  private NameRole rol;
+  @Column(nullable = false, length = 25)
+  private String rol;
 
-  @Column(nullable = false)
+  @Column(nullable = false, length = 90)
   private String description;
 }

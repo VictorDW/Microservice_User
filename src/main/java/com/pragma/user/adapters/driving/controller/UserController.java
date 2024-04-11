@@ -19,10 +19,9 @@ public class UserController {
   private final IUserHandler userHandler;
   private final IUserAdminRequestMapper userAdminRequestMapper;
 
-  @PostMapping("/admin")
+  @PostMapping("/register/admin")
   public ResponseEntity<String> register(@RequestBody UserAdminRequest userAdminRequest) {
-    var request = userAdminRequestMapper.requestAdminToRequest(userAdminRequest);
-    userHandler.register(request);
+    userHandler.register(userAdminRequest);
     return ResponseEntity.status(HttpStatus.CREATED).body("User created successfully");
   }
 

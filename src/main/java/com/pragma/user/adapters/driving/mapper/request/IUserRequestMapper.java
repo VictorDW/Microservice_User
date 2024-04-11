@@ -20,9 +20,9 @@ public interface IUserRequestMapper {
     if (Objects.isNull(id)) {
       return null;
     }
-    Role role = new Role();
-    role.setId(id);
 
-    return role;
+    return Role.newRole()
+              .id(id)
+              .build();
   }
 }
