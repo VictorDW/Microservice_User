@@ -1,23 +1,16 @@
 package com.pragma.user.domain.models;
 
-import com.pragma.user.domain.util.role.NameRole;
-import lombok.ToString;
-
-@ToString
 public class Role {
 
-  private Long id;
-  private NameRole rol;
-  private String description;
+  private final Long id;
+  private final String rol;
+  private final String description;
+  public static final long DEFAULT_ADMIN_ROL = 1L;
 
-  public Role() {
-    //Solo para mapstruct
-  }
-
-  public Role(Long id, NameRole rol, String description) {
-    this.id = id;
-    this.rol = rol;
-    this.description = description;
+  public Role(Builder builder) {
+    this.id = builder.id;
+    this.rol = builder.rol;
+    this.description = builder.description;
   }
 
   public Long getId() {
@@ -28,15 +21,41 @@ public class Role {
     return description;
   }
 
-  public NameRole getRol() {
+  public String getRol() {
     return rol;
   }
 
-  public void setId(Long id) {
-    this.id = id;
+  public static Builder newRole() {
+    return new Builder();
   }
 
-  public void setRol(NameRole rol) {
-    this.rol = rol;
+  public static final class Builder {
+
+    private Long id;
+    private String rol;
+    private String description;
+
+    public Builder() {
+      //default empty constructor
+    }
+
+    public Builder id(Long id) {
+      this.id = id;
+      return this;
+    }
+
+    public Builder rol(String rol) {
+      this.rol = rol;
+      return this;
+    }
+
+    public Builder description(String description) {
+      this.description = description;
+      return this;
+    }
+
+    public Role build() {
+      return new Role(this);
+    }
   }
 }
