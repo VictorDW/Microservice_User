@@ -34,6 +34,6 @@ public class UserEntity {
   @JoinColumn(name = "role_id", nullable = false)
   private RoleEntity role;
 
-  @Column(nullable = false, length = 20)
+  @Column(nullable = false, length = 100)
   private String password;
 }
