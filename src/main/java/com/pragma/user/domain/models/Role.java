@@ -16,14 +16,14 @@ public class Role {
   public Long getId() {
     return id;
   }
+  public String getRol() {
+    return rol;
+  }
 
   public String getDescription() {
     return description;
   }
 
-  public String getRol() {
-    return rol;
-  }
 
   public static Builder newRole() {
     return new Builder();

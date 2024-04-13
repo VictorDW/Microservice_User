@@ -1,5 +1,6 @@
-package com.pragma.user.domain.api;
+package com.pragma.user.domain.api.usecase;
 
+import com.pragma.user.domain.api.IUserServicePort;
 import com.pragma.user.domain.exception.AlreadyExistException;
 import com.pragma.user.domain.exception.NotFoundException;
 import com.pragma.user.domain.models.Role;
