@@ -20,7 +20,7 @@ public class AuthController {
 	private final IAuthHandler authHandler;
 
 	@PostMapping("/login")
-	public ResponseEntity<AuthResponse> register(@RequestBody AuthRequest authRequest) {
+	public ResponseEntity<AuthResponse> register(@RequestBody @Valid AuthRequest authRequest) {
 		return ResponseEntity.ok(authHandler.login(authRequest));
 	}
 }
