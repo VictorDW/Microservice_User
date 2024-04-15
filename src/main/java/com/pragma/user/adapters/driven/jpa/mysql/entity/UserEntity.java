@@ -30,7 +30,7 @@ public class UserEntity {
   @Column(unique = true, nullable = false, length = 80)
   private String email;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "role_id", nullable = false)
   private RoleEntity role;
 
