@@ -2,6 +2,7 @@ package com.pragma.user.configuration.jwt;
 
 import com.pragma.user.domain.models.User;
 import com.pragma.user.domain.spi.IJwtServicePort;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -13,9 +14,10 @@ import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 @Service
-public class JwtServiceAdapter implements IJwtServicePort {
+public class JwtServiceAdapter implements IJwtServicePort, IJwtServiceAuthorization {
 
 	@Value("${security.key.secret}")
 	private String secretKey;
@@ -56,6 +58,27 @@ public class JwtServiceAdapter implements IJwtServicePort {
 	private Key getKey() {
 		byte[] keyBytes = Decoders.BASE64.decode(secretKey);
 		return Keys.hmacShaKeyFor(keyBytes);
+	}
+
+	//AUTHORIZATION
+
+	@Override
+	public String getSubjectFromToken(String token) {
+		return extractClaim(token, Claims::getSubject);
+	}
+
+	private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+		Claims allClaim = extractAllClaim(token);
+		return claimsResolver.apply(allClaim);
+	}
+
+	private Claims extractAllClaim(String token) {
+		return Jwts
+				.parserBuilder()
+				.setSigningKey(getKey())
+				.build()
+				.parseClaimsJws(token)
+				.getBody();
 	}
 
 }
