@@ -2,10 +2,12 @@ package com.pragma.user.adapters.driven.jpa.mysql.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Data
+@Builder
+@Getter
 @AllArgsConstructor @NoArgsConstructor
 @Entity
 @Table(name = "user")
