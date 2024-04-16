@@ -8,10 +8,16 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring") //builder = @Builder(disableBuilder = true)
 public interface IRoleMapper {
 
+	@Mapping(target = "id", source = "role.id")
+	@Mapping(target = "rol", source = "role.rol")
+	@Mapping(target = "description", source = "role.description")
+	RoleEntity modelToEntity(Role role);
+
 	@Mapping(target = "id", source = "roleEntity.id")
 	@Mapping(target = "rol", source = "roleEntity.rol")
 	@Mapping(target = "description", source = "roleEntity.description")
 	Role entityToModel(RoleEntity roleEntity);
+
 }
 
 /*

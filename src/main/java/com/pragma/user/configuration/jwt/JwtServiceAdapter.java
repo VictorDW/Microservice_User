@@ -67,6 +67,11 @@ public class JwtServiceAdapter implements IJwtServicePort, IJwtServiceAuthorizat
 		return extractClaim(token, Claims::getSubject);
 	}
 
+	@Override
+	public String getRoleFromToken(String token) {
+		return extractClaim(token, claims ->  claims.get("role", String.class));
+	}
+
 	private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
 		Claims allClaim = extractAllClaim(token);
 		return claimsResolver.apply(allClaim);

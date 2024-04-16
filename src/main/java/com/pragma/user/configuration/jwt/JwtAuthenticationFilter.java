@@ -1,5 +1,8 @@
 package com.pragma.user.configuration.jwt;
 
+import com.pragma.user.adapters.driven.jpa.mysql.entity.CustomerUserDetails;
+import com.pragma.user.adapters.driven.jpa.mysql.entity.RoleEntity;
+import com.pragma.user.adapters.driven.jpa.mysql.entity.UserEntity;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -13,7 +16,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -27,7 +29,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
   private final Logger loggerClass = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
   private final IJwtServiceAuthorization jwtService;
-  private final UserDetailsService userDetailsService;
 
 
   @Override
@@ -66,7 +67,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
   private Authentication extractAuthenticatedUserFromToken(String token) {
 
     String emailFromUser = jwtService.getSubjectFromToken(token);
-    UserDetails userDetails = userDetailsService.loadUserByUsername(emailFromUser);
+    String roleFromUser = jwtService.getRoleFromToken(token);
+
+    UserDetails userDetails = generateUserDetailsForSecurityContext(emailFromUser, roleFromUser);
 
     return new UsernamePasswordAuthenticationToken(
         userDetails,
@@ -76,6 +79,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
   private void updateSecurityContext(Authentication authenticatedUser) {
     SecurityContextHolder.getContext().setAuthentication(authenticatedUser);
+  }
+
+  private UserDetails generateUserDetailsForSecurityContext(String email, String role) {
+
+    UserEntity userEntity = UserEntity.builder()
+        .email(email)
+        .role(RoleEntity.builder()
+            .rol(role)
+            .build()
+        )
+        .build();
+    return new CustomerUserDetails(userEntity);
   }
 
 
