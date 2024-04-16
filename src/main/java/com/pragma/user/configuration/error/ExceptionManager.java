@@ -11,6 +11,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -47,5 +48,10 @@ public class ExceptionManager {
 	@ExceptionHandler(BadCredentialsException.class)
 	public ResponseEntity<ExceptionResponse> handlerBadCredential() {
 		return generalExceptionHandler(Constants.BAD_CREDENTIALS_MESSAGE, HttpStatus.UNAUTHORIZED);
+	}
+
+	@ExceptionHandler(AccessDeniedException.class)
+	public ResponseEntity<ExceptionResponse> handlerException(AccessDeniedException exception) {
+		return generalExceptionHandler(exception.getMessage(), HttpStatus.FORBIDDEN);
 	}
 }
