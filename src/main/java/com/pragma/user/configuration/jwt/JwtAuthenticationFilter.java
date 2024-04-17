@@ -3,6 +3,7 @@ package com.pragma.user.configuration.jwt;
 import com.pragma.user.adapters.driven.jpa.mysql.entity.CustomerUserDetails;
 import com.pragma.user.adapters.driven.jpa.mysql.entity.RoleEntity;
 import com.pragma.user.adapters.driven.jpa.mysql.entity.UserEntity;
+import com.pragma.user.configuration.Constants;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -39,17 +40,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     final String token = getTokenFromRequest(request);
 
     if(Objects.isNull(token)) {
+      request.getSession().setAttribute("error_token_message", Constants.TOKEN_NOT_FOUND_MESSAGE);
       filterChain.doFilter(request, response);
       return;
     }
 
     try {
-
       Authentication authenticatedUser = extractAuthenticatedUserFromToken(token);
       updateSecurityContext(authenticatedUser);
 
     } catch (JwtException e) {
-
       loggerClass.error("INVALID TOKEN: %s".formatted(e.getMessage()));
       request.getSession().setAttribute("error_token_message", e.getMessage());
 
@@ -93,8 +93,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         .email(email)
         .role(RoleEntity.builder()
             .rol(role)
-            .build()
-        )
+            .build())
         .build();
     return new CustomerUserDetails(userEntity);
   }
