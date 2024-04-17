@@ -42,14 +42,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       filterChain.doFilter(request, response);
       return;
     }
+
     try {
+
       Authentication authenticatedUser = extractAuthenticatedUserFromToken(token);
       updateSecurityContext(authenticatedUser);
-    }catch (JwtException e) {
-      loggerClass.error("TOKEN INVALIDO: %s".formatted(e.getMessage()));
-    }
 
-    filterChain.doFilter(request, response);
+    } catch (JwtException e) {
+
+      loggerClass.error("INVALID TOKEN: %s".formatted(e.getMessage()));
+      request.getSession().setAttribute("error_token_message", e.getMessage());
+
+    } finally {
+      filterChain.doFilter(request, response);
+    }
 
   }
 
