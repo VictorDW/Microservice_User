@@ -20,12 +20,12 @@ import java.util.List;
 @ControllerAdvice
 public class ExceptionManager {
 
-	private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+	public static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
 
-	private ResponseEntity<ExceptionResponse> generalExceptionHandler(String exceptionMessage, HttpStatus httpStatus) {
+	public static ResponseEntity<ExceptionResponse> generalExceptionHandler(String exceptionMessage, HttpStatus httpStatus) {
 
 		ExceptionResponse response = new ExceptionResponse(
-				formatter.format(LocalDateTime.now()),
+				FORMATTER.format(LocalDateTime.now()),
 				httpStatus.value(),
 				httpStatus.getReasonPhrase(),
 				exceptionMessage
