@@ -23,6 +23,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Objects;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -37,16 +38,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                   @NonNull HttpServletResponse response,
                                   @NonNull FilterChain filterChain) throws ServletException, IOException {
 
-    final String token = getTokenFromRequest(request);
+    final var token = getTokenFromRequest(request);
 
-    if(Objects.isNull(token)) {
+    if(token.isEmpty()) {
       request.getSession().setAttribute("error_token_message", Constants.TOKEN_NOT_FOUND_MESSAGE);
       filterChain.doFilter(request, response);
       return;
     }
 
     try {
-      Authentication authenticatedUser = extractAuthenticatedUserFromToken(token);
+      Authentication authenticatedUser = extractAuthenticatedUserFromToken(token.get());
       updateSecurityContext(authenticatedUser);
 
     } catch (JwtException e) {
@@ -59,15 +60,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
   }
 
-  private String getTokenFromRequest(HttpServletRequest request) {
+  private Optional<String> getTokenFromRequest(HttpServletRequest request) {
 
     final String authHeader = request.getHeader("Authorization");
 
     if(StringUtils.hasText(authHeader) && authHeader.startsWith("Bearer ")) {
-      return authHeader.substring(7);
+      return Optional.of(authHeader.substring(7));
     }
-
-    return null;
+    return Optional.empty();
   }
 
   private Authentication extractAuthenticatedUserFromToken(String token) {
