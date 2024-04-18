@@ -62,14 +62,12 @@ class UserUseCaseTest {
 	@DisplayName("Given a null in the role, you must assign it the administrator role")
 	void test2() {
 
-		Long idRol = Role.DEFAULT_ADMIN_ROL;
 		Role role = Role.newRole()
-								.id(idRol)
 								.rol("ADMIN")
 								.build();
 
 	//GIVEN
-		given(rolPersistencePort.getRoleById(idRol)).willReturn(Optional.of(role));
+		given(rolPersistencePort.getRoleByName(Role.DEFAULT_ADMIN_ROL)).willReturn(Optional.of(role));
 
 	//WHEN
 		userUseCase.register(userWithoutRole);
@@ -77,7 +75,6 @@ class UserUseCaseTest {
 	//THEN
 		assertAll(
 				() -> assertNotNull(userWithoutRole.getRole()),
-				() -> assertEquals(idRol, userWithoutRole.getRole().getId()),
 				() -> assertEquals(TypeRole.ADMIN.name(), userWithoutRole.getRole().getRol())
 		);
 	}
@@ -100,8 +97,8 @@ class UserUseCaseTest {
 		//THEN
 		assertAll(
 				() -> assertNotNull(userWithRole.getRole()),
-				() -> assertEquals(2L, userWithRole.getRole().getId()),
-				() -> assertEquals(TypeRole.TUTOR.name(), userWithRole.getRole().getRol()) //TODO verificar la asignación del rol en el UserUseCase
+				() -> assertEquals(idRol, userWithRole.getRole().getId()),
+				() -> assertEquals(TypeRole.TUTOR.name(), userWithRole.getRole().getRol())
 		);
 	}
 
@@ -110,7 +107,7 @@ class UserUseCaseTest {
 	void test4() {
 
 		//GIVEN
-		given(rolPersistencePort.getRoleById(Role.DEFAULT_ADMIN_ROL)).willReturn(Optional.empty());
+		given(rolPersistencePort.getRoleByName(Role.DEFAULT_ADMIN_ROL)).willReturn(Optional.empty());
 
 		//WHEN - THEN
 		assertThrows(NotFoundException.class, () -> userUseCase.register(userWithoutRole));
