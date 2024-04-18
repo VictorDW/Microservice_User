@@ -2,10 +2,12 @@ package com.pragma.user.adapters.driven.jpa.mysql.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Data
+@Builder
+@Getter
 @AllArgsConstructor @NoArgsConstructor
 @Entity
 @Table(name = "user")
@@ -30,10 +32,10 @@ public class UserEntity {
   @Column(unique = true, nullable = false, length = 80)
   private String email;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "role_id", nullable = false)
   private RoleEntity role;
 
-  @Column(nullable = false, length = 20)
+  @Column(nullable = false, length = 100)
   private String password;
 }

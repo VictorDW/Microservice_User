@@ -23,6 +23,10 @@ public class Constants {
 	public static final String EMAIL_INVALID_MESSAGE = "Invalid email address";
 	public static final String PASSWORD_INVALID_MESSAGE = "It must not contain special characters other than @ and .";
 	public static final String PASSWORD_SIZE_MESSAGE = "Must contain a minimum of 4 characters and a maximum of 20 characters.";
+	public static final String USER_NOT_FOUND_MESSAGE = "User with email: %s not found";
+	public static final String BAD_CREDENTIALS_MESSAGE = "Incorrect Credentials";
+	public static final String TOKEN_NOT_FOUND_MESSAGE = "Token not found";
+	public static final String ACCESS_DENIED_MESSAGE = "Access Denied";
 
 
 }

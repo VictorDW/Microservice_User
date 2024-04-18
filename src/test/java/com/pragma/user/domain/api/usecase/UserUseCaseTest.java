@@ -1,4 +1,4 @@
-package com.pragma.user.domain.api;
+package com.pragma.user.domain.api.usecase;
 
 import com.pragma.user.domain.exception.AlreadyExistException;
 import com.pragma.user.domain.exception.NotFoundException;
@@ -14,6 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
@@ -33,11 +34,17 @@ class UserUseCaseTest {
 	@Mock
 	private IRolPersistencePort rolPersistencePort;
 
-	private User user;
+	@Mock
+	private PasswordEncoder passwordEncoder;
+
+	private User userWithoutRole;
+	private User userWithRole;
 
 	@BeforeEach
 	void setUp() {
-		user = new User(null, "test", "test", "test", "test", "test", "test");
+		userWithoutRole = new User(null, "test", "test", "test", "test", "test", "test");
+		userWithRole = new User(null, "test 2", "test 2", "test 2", "test 2", "test 2", "test 2");
+		userWithRole.setRole(Role.newRole().id(2L).build());
 	}
 
 	@Test
@@ -45,10 +52,10 @@ class UserUseCaseTest {
 	void test1() {
 
 		//GIVEN
-		given(userPersistencePort.verifyUserByEmail("test")).willReturn(Optional.of(user));
+		given(userPersistencePort.verifyUserByEmail("test 2")).willReturn(Optional.of(userWithRole));
 
 		//WHEN - THEN
-		assertThrows(AlreadyExistException.class, () -> userUseCase.register(user));
+		assertThrows(AlreadyExistException.class, () -> userUseCase.register(userWithRole));
 	}
 
 	@Test
@@ -65,13 +72,13 @@ class UserUseCaseTest {
 		given(rolPersistencePort.getRoleById(idRol)).willReturn(Optional.of(role));
 
 	//WHEN
-		userUseCase.register(user);
+		userUseCase.register(userWithoutRole);
 
 	//THEN
 		assertAll(
-				() -> assertNotNull(user.getRole()),
-				() -> assertEquals(idRol, user.getRole().getId()),
-				() -> assertEquals(TypeRole.ADMIN.name(), user.getRole().getRol())
+				() -> assertNotNull(userWithoutRole.getRole()),
+				() -> assertEquals(idRol, userWithoutRole.getRole().getId()),
+				() -> assertEquals(TypeRole.ADMIN.name(), userWithoutRole.getRole().getRol())
 		);
 	}
 
@@ -80,21 +87,21 @@ class UserUseCaseTest {
 	void test3() {
 
 		//GIVEN
-		Role role = Role.newRole()
+		Long idRol = userWithRole.getRole().getId();
+		Role response = Role.newRole()
 								.id(2L)
 								.rol("TUTOR")
 								.build();
-		user.setRole(role);
-		given(rolPersistencePort.getRoleById(role.getId())).willReturn(Optional.of(role));
+		given(rolPersistencePort.getRoleById(idRol)).willReturn(Optional.of(response));
 
 		//WHEN
-		userUseCase.register(user);
+		userUseCase.register(userWithRole);
 
 		//THEN
 		assertAll(
-				() -> assertNotNull(user.getRole()),
-				() -> assertEquals(2L, user.getRole().getId()),
-				() -> assertEquals(TypeRole.TUTOR.name(), user.getRole().getRol())
+				() -> assertNotNull(userWithRole.getRole()),
+				() -> assertEquals(2L, userWithRole.getRole().getId()),
+				() -> assertEquals(TypeRole.TUTOR.name(), userWithRole.getRole().getRol()) //TODO verificar la asignación del rol en el UserUseCase
 		);
 	}
 
@@ -106,7 +113,7 @@ class UserUseCaseTest {
 		given(rolPersistencePort.getRoleById(Role.DEFAULT_ADMIN_ROL)).willReturn(Optional.empty());
 
 		//WHEN - THEN
-		assertThrows(NotFoundException.class, () -> userUseCase.register(user));
+		assertThrows(NotFoundException.class, () -> userUseCase.register(userWithoutRole));
 	}
 
 	@Test
@@ -119,13 +126,12 @@ class UserUseCaseTest {
 				.rol("TUTOR")
 				.build();
 
-		user.setRole(role);
 		given(rolPersistencePort.getRoleById(role.getId())).willReturn(Optional.of(role));
 
 		//WHEN
-		userUseCase.register(user);
+		userUseCase.register(userWithRole);
 
 		//THEN
-		verify(userPersistencePort, times(1)).saveUser(user);
+		verify(userPersistencePort, times(1)).saveUser(userWithRole);
 	}
 }

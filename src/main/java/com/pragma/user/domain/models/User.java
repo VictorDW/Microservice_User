@@ -1,8 +1,5 @@
 package com.pragma.user.domain.models;
 
-import lombok.ToString;
-
-@ToString
 public class User {
 
   private final Long id;
@@ -12,7 +9,7 @@ public class User {
   private final String cellphone;
   private final String email;
   private Role role;
-  private final String password;
+  private String password;
 
   public User(Long id, String firstName, String lastName, String dni, String cellphone, String email, String password) {
     this.id = id;
@@ -58,5 +55,8 @@ public class User {
 
   public void setRole(Role role) {
     this.role = role;
+  }
+  public void setPassword(String password) {
+    this.password = password;
   }
 }
