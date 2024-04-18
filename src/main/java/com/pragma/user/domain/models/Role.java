@@ -5,7 +5,7 @@ public class Role {
   private final Long id;
   private final String rol;
   private final String description;
-  public static final long DEFAULT_ADMIN_ROL = 1L;
+  public static final String DEFAULT_ADMIN_ROL = "ADMIN";
 
   public Role(Builder builder) {
     this.id = builder.id;

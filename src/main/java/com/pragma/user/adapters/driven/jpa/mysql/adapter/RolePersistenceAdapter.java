@@ -19,4 +19,10 @@ public class RolePersistenceAdapter implements IRolPersistencePort {
 		return roleRepository.findById(id)
 				.map(roleMapper::entityToModel);
 	}
+
+	@Override
+	public Optional<Role> getRoleByName(String typeRole) {
+		return roleRepository.findByRol(typeRole)
+				.map(roleMapper::entityToModel);
+	}
 }

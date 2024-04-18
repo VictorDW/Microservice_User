@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 public class UserUseCase implements IUserServicePort {
 
@@ -30,8 +31,9 @@ public class UserUseCase implements IUserServicePort {
 
   @Override
   public void register(User user) {
+
     executeVerifyExistUser(user.getEmail());
-    executeAdminCreation(user);
+    executeRoleAssignment(user);
     encoderPassword(user);
     userPersistencePort.saveUser(user);
   }
@@ -49,24 +51,50 @@ public class UserUseCase implements IUserServicePort {
         });
   }
 
-  private void executeAdminCreation(User user) {
-    if (Objects.isNull(user.getRole())) {
-      user.setRole(verifyRol(Role.DEFAULT_ADMIN_ROL));
-    } else {
-      verifyRol(user.getRole().getId());
-    }
+/*  private void executeRoleAssignment(User user) {
+
+//    Role role = Objects.isNull(user.getRole()) ?
+//        getAdminRole() : verifyRol(user.getRole().getId());
+
+    Optional<Role> role = Optional.ofNullable(user.getRole())
+        .map(Role::getId)
+        .flatMap(this::verifyRol);
+
+    user.setRole(role.orElseGet(this::getAdminRole));
+  }
+ */
+
+  private void executeRoleAssignment(User user) {
+
+    Role role = Objects.isNull(user.getRole()) ?
+        getAdminRole() : verifyRol(user.getRole().getId());
+
+    user.setRole(role);
+  }
+
+  private Role getAdminRole() {
+    return rolPersistencePort.getRoleByName(Role.DEFAULT_ADMIN_ROL)
+        .orElseThrow(getNotFoundException());
   }
 
   private Role verifyRol(Long idRol) {
-   return rolPersistencePort.getRoleById(idRol)
-       .orElseThrow(() ->
-         new NotFoundException(
-             String.format(
-                 DomainConstants.NOT_FOUND_MESSAGE,
-                 DomainConstants.Class.ROLE.name()))
-       );
+    return rolPersistencePort.getRoleById(idRol)
+        .orElseThrow(getNotFoundException());
   }
+ /* private Optional<Role> verifyRol(Long idRol) {
+   return rolPersistencePort.getRoleById(idRol);
+  }
+  */
 
+  private static Supplier<NotFoundException> getNotFoundException() {
+    return () ->
+        new NotFoundException(
+            String.format(
+                DomainConstants.NOT_FOUND_MESSAGE,
+                DomainConstants.Class.ROLE.name()));
+  }
+  
+  
   private void encoderPassword(User user) {
     user.setPassword(passwordEncoder.encode(user.getPassword()));
   }

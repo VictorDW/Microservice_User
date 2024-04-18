@@ -7,4 +7,5 @@ import java.util.Optional;
 public interface IRolPersistencePort {
 
 	Optional<Role> getRoleById(Long id);
+	Optional<Role> getRoleByName(String typeRole);
 }
