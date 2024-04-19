@@ -51,7 +51,7 @@ public class UserUseCase implements IUserServicePort {
         });
   }
 
-/*  private void executeRoleAssignment(User user) {
+  /*  private void executeRoleAssignment(User user) {
 
 //    Role role = Objects.isNull(user.getRole()) ?
 //        getAdminRole() : verifyRol(user.getRole().getId());
@@ -64,28 +64,27 @@ public class UserUseCase implements IUserServicePort {
   }
  */
 
-  private void executeRoleAssignment(User user) {
-
-    Role role = Objects.isNull(user.getRole()) ?
-        getAdminRole() : verifyRol(user.getRole().getId());
-
-    user.setRole(role);
-  }
-
-  private Role getAdminRole() {
-    return rolPersistencePort.getRoleByName(Role.DEFAULT_ADMIN_ROL)
-        .orElseThrow(getNotFoundException());
-  }
-
-  private Role verifyRol(Long idRol) {
-    return rolPersistencePort.getRoleById(idRol)
-        .orElseThrow(getNotFoundException());
-  }
- /* private Optional<Role> verifyRol(Long idRol) {
+  /* private Optional<Role> verifyRol(Long idRol) {
    return rolPersistencePort.getRoleById(idRol);
   }
   */
 
+  private void executeRoleAssignment(User user) {
+
+    var role = Objects.isNull(user.getRole()) ?
+        getAdminRole() : findRoleById(user.getRole().getId());
+
+    user.setRole(role.orElseThrow(getNotFoundException()));
+  }
+
+  private Optional<Role> getAdminRole() {
+    return rolPersistencePort.getRoleByName(Role.DEFAULT_ADMIN_ROL);
+  }
+
+  private Optional<Role> findRoleById(Long idRol) {
+    return rolPersistencePort.getRoleById(idRol);
+  }
+  
   private static Supplier<NotFoundException> getNotFoundException() {
     return () ->
         new NotFoundException(
