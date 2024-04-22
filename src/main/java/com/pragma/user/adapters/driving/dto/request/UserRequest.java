@@ -3,38 +3,23 @@ package com.pragma.user.adapters.driving.dto.request;
 import com.pragma.user.configuration.Constants;
 import jakarta.validation.constraints.*;
 
-public record UserRequest(
-		@NotBlank(message = Constants.FIELD_EMPTY_MESSAGE)
-		@Pattern(regexp = Constants.PATTERN_LETTERS, message = Constants.ONLY_LETTERS_MESSAGE)
-		@Size(min = 4, max = 50, message = Constants.DEFAULT_SIZE_MESSAGE)
-		String firstName,
 
-		@NotBlank(message = Constants.FIELD_EMPTY_MESSAGE)
-		@Pattern(regexp = Constants.PATTERN_LETTERS, message = Constants.ONLY_LETTERS_MESSAGE)
-		@Size(min = 4, max = 50, message = Constants.DEFAULT_SIZE_MESSAGE)
-		String lastName,
+public class UserRequest extends Request{
 
-		@NotBlank(message = Constants.FIELD_EMPTY_MESSAGE)
-		@Pattern(regexp = Constants.PATTERN_NUMBERS, message = Constants.ONLY_NUMBERS_MESSAGE)
-		@Size(min = 8, max = 11, message = Constants.DNI_SIZE_MESSAGE)
-		String dni,
+  @NotNull(message = Constants.FIELD_NOT_NULL_MESSAGE)
+  private final Long idRole;
 
-		@NotBlank(message = Constants.FIELD_EMPTY_MESSAGE)
-		@Pattern(regexp = Constants.PATTERN_NUMBERS, message = Constants.ONLY_NUMBERS_MESSAGE)
-		@Size(min = 10, max = 10, message = Constants.CELLPHONE_SIZE_MESSAGE)
-		String cellphone,
+  public UserRequest(String firstName,
+                     String lastName,
+                     String dni,
+                     String cellphone,
+                     String email,
+                     Long idRole,
+                     String password) {
 
-		@NotBlank(message = Constants.FIELD_EMPTY_MESSAGE)
-		@Email(message = Constants.EMAIL_INVALID_MESSAGE)
-		String email,
-
-		@NotNull(message = Constants.FIELD_NOT_NULL_MESSAGE)
-		@Pattern(regexp = Constants.PATTERN_NUMBERS, message = Constants.ONLY_NUMBERS_MESSAGE)
-    Long idRol,
-
-		@NotBlank(message = Constants.FIELD_EMPTY_MESSAGE)
-		@Pattern(regexp = Constants.PATTERN_PASSWORD, message = Constants.PASSWORD_INVALID_MESSAGE)
-		@Size(min=4, max = 20, message = Constants.PASSWORD_SIZE_MESSAGE)
-		String password
-) {
+    super(firstName, lastName, dni, cellphone, email, password);
+    this.idRole = idRole;
+    super.setIdRol(this.idRole);
+    isWithoutEndpointPermissionUsing = false;
+  }
 }
