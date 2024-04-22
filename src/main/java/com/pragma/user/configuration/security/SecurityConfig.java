@@ -1,9 +1,12 @@
 package com.pragma.user.configuration.security;
 
 import com.pragma.user.adapters.driven.jpa.mysql.entity.CustomerUserDetails;
+import com.pragma.user.adapters.driven.jpa.mysql.mapper.IUserMapper;
 import com.pragma.user.adapters.driven.jpa.mysql.repository.IUserRepository;
 import com.pragma.user.configuration.Constants;
 import com.pragma.user.configuration.jwt.JwtAuthenticationFilter;
+import com.pragma.user.domain.models.Role;
+import com.pragma.user.domain.models.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +19,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -24,6 +29,9 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 @Configuration
 @EnableWebSecurity
@@ -35,6 +43,7 @@ public class SecurityConfig {
 	private final AuthenticationEntryPoint jwtAuthenticationEntryPoint;
 	private final AccessDeniedHandler permissionsAccessDeniedHandler;
 	private final IUserRepository userRepository;
+	private final IUserMapper userMapper;
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -83,5 +92,14 @@ public class SecurityConfig {
 												Constants.USER_NOT_FOUND_MESSAGE,
 												email))
 						);
+	}
+
+	@Bean
+	public Supplier<String> getAuthenticatedUser(IUserMapper userMapper) {
+		return () -> {
+			var customerUserDetails = (CustomerUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			User user = userMapper.entityToModel(customerUserDetails.userEntity());
+			return user.getRole().getRol();
+		};
 	}
 }

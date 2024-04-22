@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 public abstract class Request {
 
-  protected static boolean isWithoutEndpointPermissionUsing;
+  protected boolean isWithoutEndpointPermissionUsing;
 
   @NotBlank(message = Constants.FIELD_EMPTY_MESSAGE)
   @Pattern(regexp = Constants.PATTERN_LETTERS, message = Constants.ONLY_LETTERS_MESSAGE)
