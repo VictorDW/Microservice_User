@@ -1,10 +1,7 @@
 package com.pragma.user.adapters.driven.jpa.mysql.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Builder
 @Getter
@@ -36,6 +33,7 @@ public class UserEntity {
   @JoinColumn(name = "role_id", nullable = false)
   private RoleEntity role;
 
+  @Setter
   @Column(nullable = false, length = 100)
   private String password;
 }

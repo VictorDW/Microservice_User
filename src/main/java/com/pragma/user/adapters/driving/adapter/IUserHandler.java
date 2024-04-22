@@ -1,8 +1,8 @@
 package com.pragma.user.adapters.driving.adapter;
 
-import com.pragma.user.adapters.driving.dto.request.UserAdminRequest;
+import com.pragma.user.adapters.driving.dto.request.Request;
 
 public interface IUserHandler {
 
-  void register(UserAdminRequest request);
+  <T extends Request> void register(T t);
 }

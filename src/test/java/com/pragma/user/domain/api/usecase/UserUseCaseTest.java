@@ -34,17 +34,19 @@ class UserUseCaseTest {
 	@Mock
 	private IRolPersistencePort rolPersistencePort;
 
-	@Mock
-	private PasswordEncoder passwordEncoder;
-
 	private User userWithoutRole;
 	private User userWithRole;
 
 	@BeforeEach
 	void setUp() {
-		userWithoutRole = new User(null, "test", "test", "test", "test", "test", "test");
-		userWithRole = new User(null, "test 2", "test 2", "test 2", "test 2", "test 2", "test 2");
-		userWithRole.setRole(Role.newRole().id(2L).build());
+		userWithoutRole = User.newUser().build();
+		userWithRole = User.newUser()
+				.email("test 2")
+				.build();
+		userWithRole.setRole(
+				Role.newRole()
+						.id(2L)
+						.build());
 	}
 
 	@Test

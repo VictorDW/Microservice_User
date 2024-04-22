@@ -37,7 +37,7 @@ public class ApplicationConfig {
 
   @Bean
   public IUserPersistencePort userPersistence() {
-    return new UserPersistenceAdapter(userRepository, userMapper);
+    return new UserPersistenceAdapter(userRepository, userMapper, passwordEncoder);
   }
 
   @Bean
@@ -47,7 +47,7 @@ public class ApplicationConfig {
 
   @Bean
   public IUserServicePort userService() {
-    return new UserUseCase(rolePersistence(), userPersistence(), passwordEncoder);
+    return new UserUseCase(rolePersistence(), userPersistence());
   }
 
   @Bean
