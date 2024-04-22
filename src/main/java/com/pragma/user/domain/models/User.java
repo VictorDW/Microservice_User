@@ -9,16 +9,17 @@ public class User {
   private final String cellphone;
   private final String email;
   private Role role;
-  private String password;
+  private final String password;
 
-  public User(Long id, String firstName, String lastName, String dni, String cellphone, String email, String password) {
-    this.id = id;
-    this.firstName = firstName;
-    this.lastName = lastName;
-    this.dni = dni;
-    this.cellphone = cellphone;
-    this.email = email;
-    this.password = password;
+  public User(BuilderUser builder) {
+    this.id = builder.id;
+    this.firstName = builder.firstName;
+    this.lastName = builder.lastName;
+    this.dni = builder.dni;
+    this.cellphone = builder.cellphone;
+    this.email = builder.email;
+    this.role = builder.role;
+    this.password = builder.password;
   }
 
   public String getPassword() {
@@ -56,7 +57,68 @@ public class User {
   public void setRole(Role role) {
     this.role = role;
   }
-  public void setPassword(String password) {
-    this.password = password;
+
+  public static BuilderUser newUser() {
+    return new BuilderUser();
+  }
+
+  public static class BuilderUser {
+
+    private Long id;
+    private String firstName;
+    private String lastName;
+    private String dni;
+    private String cellphone;
+    private String email;
+    private Role role;
+    private String password;
+
+    private BuilderUser() {
+      //default empty constructor
+    }
+
+    public BuilderUser id(Long id) {
+      this.id = id;
+      return this;
+    }
+
+    public BuilderUser firstName(String firstName) {
+      this.firstName = firstName;
+      return this;
+    }
+
+    public BuilderUser lastName(String lastName) {
+      this.lastName = lastName;
+      return this;
+    }
+
+    public BuilderUser dni(String dni) {
+      this.dni = dni;
+      return this;
+    }
+
+    public BuilderUser cellphone(String cellphone) {
+      this.cellphone = cellphone;
+      return this;
+    }
+
+    public BuilderUser email(String email) {
+      this.email = email;
+      return this;
+    }
+
+    public BuilderUser role(Role role) {
+      this.role = role;
+      return this;
+    }
+
+    public BuilderUser password(String password) {
+      this.password = password;
+      return this;
+    }
+
+    public User build() {
+      return new User(this);
+    }
   }
 }
