@@ -38,10 +38,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                   @NonNull HttpServletResponse response,
                                   @NonNull FilterChain filterChain) throws ServletException, IOException {
 
+    request.getSession().removeAttribute("error_token");
     final var token = getTokenFromRequest(request);
 
     if(token.isEmpty()) {
-      request.getSession().setAttribute("error_token_message", Constants.TOKEN_NOT_FOUND_MESSAGE);
       filterChain.doFilter(request, response);
       return;
     }
@@ -52,7 +52,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     } catch (JwtException e) {
       loggerClass.error("INVALID TOKEN: %s".formatted(e.getMessage()));
-      request.getSession().setAttribute("error_token_message", e.getMessage());
+      request.getSession().setAttribute("error_token", e.getMessage());
 
     } finally {
       filterChain.doFilter(request, response);
