@@ -3,6 +3,9 @@ package com.pragma.user.configuration.error;
 import com.pragma.user.configuration.Constants;
 import com.pragma.user.configuration.error.dto.ExceptionArgumentResponse;
 import com.pragma.user.configuration.error.dto.ExceptionResponse;
+import com.pragma.user.domain.exception.AlreadyExistException;
+import com.pragma.user.domain.exception.InitialEndpointUnavailableException;
+import com.pragma.user.domain.exception.WithoutPermitsException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +14,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -50,8 +52,20 @@ public class ExceptionManager {
 		return generalExceptionHandler(Constants.BAD_CREDENTIALS_MESSAGE, HttpStatus.UNAUTHORIZED);
 	}
 
-	@ExceptionHandler(AccessDeniedException.class)
-	public ResponseEntity<ExceptionResponse> handlerException(AccessDeniedException exception) {
+	@ExceptionHandler(AlreadyExistException.class)
+	public ResponseEntity<ExceptionResponse> handlerAlreadyExistException(AlreadyExistException exception) {
+		return generalExceptionHandler(exception.getMessage(), HttpStatus.CONFLICT);
+	}
+
+	@ExceptionHandler(WithoutPermitsException.class)
+	public ResponseEntity<ExceptionResponse> handlerWithoutPermitsException(WithoutPermitsException exception) {
 		return generalExceptionHandler(exception.getMessage(), HttpStatus.FORBIDDEN);
 	}
+
+	@ExceptionHandler(InitialEndpointUnavailableException.class)
+	public ResponseEntity<ExceptionResponse> handlerInitialEndpointUnavailableException(InitialEndpointUnavailableException exception) {
+		return generalExceptionHandler(exception.getMessage(), HttpStatus.SERVICE_UNAVAILABLE);
+	}
+
+
 }
