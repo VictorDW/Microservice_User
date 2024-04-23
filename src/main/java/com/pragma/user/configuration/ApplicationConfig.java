@@ -21,18 +21,20 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.function.Supplier;
+
 @Configuration
 @RequiredArgsConstructor
 public class ApplicationConfig {
 
   private final IJwtServicePort jwtServicePort;
-
   private final IUserRepository userRepository;
   private final IRoleRepository roleRepository;
   private final IUserMapper userMapper;
   private final IRoleMapper roleMapper;
   private final PasswordEncoder passwordEncoder;
   private final AuthenticationManager authenticationManager;
+  private final Supplier<String> roleSupplier;
 
 
   @Bean
@@ -47,7 +49,7 @@ public class ApplicationConfig {
 
   @Bean
   public IUserServicePort userService() {
-    return new UserUseCase(rolePersistence(), userPersistence());
+    return new UserUseCase(rolePersistence(), userPersistence(), roleSupplier);
   }
 
   @Bean

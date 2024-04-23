@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
 
+import java.util.Objects;
+
 @Configuration
 @RequiredArgsConstructor
 public class ExceptionConfig {
@@ -26,15 +28,17 @@ public class ExceptionConfig {
   public AuthenticationEntryPoint jwtAuthenticationEntryPoint() {
     return (request, response, authException) -> {
 
-      Object messageToken = request.getSession().getAttribute("error_token_message");
+      response.setStatus(HttpStatus.UNAUTHORIZED.value());
+      response.setContentType(CONTENT_TYPE);
+      response.setCharacterEncoding(CHARACTER_ENCODING);
 
-      if (messageToken != null) {
+      Object errorToken = request.getSession().getAttribute("error_token");
+      String message = Objects.isNull(errorToken) ?
+          Constants.ACCESS_DENIED_MESSAGE :
+          errorToken.toString();
 
-        response.setStatus(HttpStatus.UNAUTHORIZED.value());
-        response.setContentType(CONTENT_TYPE);
-        response.setCharacterEncoding(CHARACTER_ENCODING);
-        response.getWriter().write(this.convertExceptionToString(messageToken.toString(), HttpStatus.UNAUTHORIZED));
-      }
+      response.getWriter().write(this.convertExceptionToString(message, HttpStatus.UNAUTHORIZED));
+
     };
   }
 
@@ -45,7 +49,9 @@ public class ExceptionConfig {
       response.setStatus(HttpStatus.FORBIDDEN.value());
       response.setContentType(CONTENT_TYPE);
       response.setCharacterEncoding(CHARACTER_ENCODING);
-      response.getWriter().write(this.convertExceptionToString(accessDeniedException.getMessage(), HttpStatus.FORBIDDEN));
+      response.getWriter().write(this.convertExceptionToString(
+          String.format("%s: %s", accessDeniedException.getMessage(), Constants.PERMISSIONS_ACCESS_DENIED_MESSAGE),
+          HttpStatus.FORBIDDEN));
     };
   }
 

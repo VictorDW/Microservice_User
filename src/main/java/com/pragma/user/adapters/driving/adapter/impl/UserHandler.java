@@ -17,6 +17,6 @@ public class UserHandler implements IUserHandler {
   @Override
   public <T extends Request> void register(T t) {
     var user = userRequestMapper.requestToModel(t);
-    userServicePort.register(user);
+    userServicePort.register(user, t.isWithoutEndpointPermissionUsing());
   }
 }

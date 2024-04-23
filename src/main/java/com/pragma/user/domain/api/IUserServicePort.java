@@ -4,6 +4,6 @@ import com.pragma.user.domain.models.User;
 
 public interface IUserServicePort {
 
-  void register(User user);
+  void register(User user, boolean isWithoutEndpointPermissionUsing);
 
 }
