@@ -2,6 +2,7 @@ package com.pragma.user.domain.api.usecase;
 
 import com.pragma.user.domain.api.IUserServicePort;
 import com.pragma.user.domain.exception.AlreadyExistException;
+import com.pragma.user.domain.exception.InitialEndpointUnavailableException;
 import com.pragma.user.domain.exception.NotFoundException;
 import com.pragma.user.domain.exception.WithoutPermitsException;
 import com.pragma.user.domain.models.Role;
@@ -51,7 +52,8 @@ public class UserUseCase implements IUserServicePort {
 
   private void roleAssignment(User user, boolean isWithoutEndpointPermissionUsing) {
 
-    Role role = isWithoutEndpointPermissionUsing ? getAdminRole() : findRoleById(user.getRole().getId());
+    Role role = isWithoutEndpointPermissionUsing ?
+        getAdminRole() : findRoleById(user.getRole().getId());
 
     if (!isWithoutEndpointPermissionUsing) {
       executePermissionsValidation(roleSupplier.get(), role);
@@ -74,7 +76,14 @@ public class UserUseCase implements IUserServicePort {
   }
 
   private Role getAdminRole() {
+    verifyAdminRoleExistence();
     return rolPersistencePort.getRoleByName(Role.DEFAULT_ADMIN_ROL).orElseThrow(getNotFoundException());
+  }
+
+  private void verifyAdminRoleExistence() {
+    if (userPersistencePort.isUserWithAdminRolePresent(Role.DEFAULT_ADMIN_ROL)) {
+      throw new InitialEndpointUnavailableException(DomainConstants.INITIAL_ENDPOINT_UNAVAILABLE);
+    }
   }
 
   private Role findRoleById(Long idRol) {

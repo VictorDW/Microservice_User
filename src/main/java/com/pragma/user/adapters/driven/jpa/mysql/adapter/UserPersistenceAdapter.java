@@ -8,6 +8,7 @@ import com.pragma.user.domain.spi.IUserPersistencePort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -32,4 +33,14 @@ public class UserPersistenceAdapter implements IUserPersistencePort {
 	public Optional<User> verifyUserByEmail(String email) {
 		return userRepository.findByEmail(email).map(userMapper::entityToModel);
 	}
+
+	@Override
+	public boolean isUserWithAdminRolePresent(String roleName) {
+		List<UserEntity> verifyUserByRol = userRepository.findByRole_Rol(roleName);
+		return !verifyUserByRol.isEmpty();
+	}
+
+
+
+
 }

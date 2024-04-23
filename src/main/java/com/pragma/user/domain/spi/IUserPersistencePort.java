@@ -9,4 +9,6 @@ public interface IUserPersistencePort {
   void saveUser(User user);
 
   Optional<User> verifyUserByEmail(String email);
+
+  boolean isUserWithAdminRolePresent(String roleName);
 }
