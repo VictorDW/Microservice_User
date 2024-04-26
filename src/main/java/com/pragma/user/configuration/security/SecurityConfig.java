@@ -30,7 +30,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import java.util.function.Supplier;
 
 @Configuration
-@EnableWebSecurity
 @EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {

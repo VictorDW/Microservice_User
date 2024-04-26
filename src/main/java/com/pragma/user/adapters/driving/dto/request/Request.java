@@ -1,6 +1,7 @@
 package com.pragma.user.adapters.driving.dto.request;
 
 import com.pragma.user.configuration.Constants;
+import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -55,5 +56,10 @@ public abstract class Request {
     this.dni = dni;
     this.lastName = lastName;
     this.firstName = firstName;
+  }
+
+  @Hidden
+  public boolean isWithoutEndpointPermissionUsing() {
+    return isWithoutEndpointPermissionUsing;
   }
 }

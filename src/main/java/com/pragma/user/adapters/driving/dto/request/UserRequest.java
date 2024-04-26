@@ -7,6 +7,7 @@ import jakarta.validation.constraints.*;
 public class UserRequest extends Request{
 
   @NotNull(message = Constants.FIELD_NOT_NULL_MESSAGE)
+  @Min(value = 1, message = Constants.ROLE_NOT_NULL_MESSAGE)
   private final Long idRole;
 
   public UserRequest(String firstName,
