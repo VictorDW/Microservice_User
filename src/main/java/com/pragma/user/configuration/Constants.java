@@ -27,7 +27,7 @@ public class Constants {
 	public static final String BAD_CREDENTIALS_MESSAGE = "Incorrect Credentials";
 	public static final String ACCESS_DENIED_MESSAGE = "Access Denied";
 	public static final String PERMISSIONS_ACCESS_DENIED_MESSAGE = "Don´t have permissions to access this endpoint";
-
+	public static final String ROLE_NOT_NULL_MESSAGE = "The role id must not be less than 1";
 
 
 }
