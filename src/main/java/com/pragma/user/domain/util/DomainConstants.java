@@ -11,8 +11,8 @@ public class DomainConstants {
 		ROLE;
 	}
 
-	public static final String ALREADY_EXIST_MESSAGE = "This user with email %s you want to register already exists";
-	public static final String NOT_FOUND_MESSAGE = "The %s not found";
-	public static final String WITHOUT_PERMISSIONS_MESSAGE = " Don't have permission to create an %s";
-	public static final String INITIAL_ENDPOINT_UNAVAILABLE = "The first administrator has already been registered. Please use the alternative endpoint to register";
+	public static final String ALREADY_EXIST_MESSAGE = "Este usuario con email %s que quieres registrar ya existe";
+	public static final String NOT_FOUND_MESSAGE = "El %s no fue encontrado";
+	public static final String WITHOUT_PERMISSIONS_MESSAGE = " No tienes los permisos para crear un %s";
+	public static final String INITIAL_ENDPOINT_UNAVAILABLE = "El primer administrador ya ha sido registrado. Utilice el servicio alternativo para registrar";
 }
