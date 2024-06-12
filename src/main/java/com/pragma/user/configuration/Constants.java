@@ -9,7 +9,7 @@ public class Constants {
 	//REGULAR EXPRESSION
 	public static final String PATTERN_LETTERS = "^[A-Za-z\\s]+$";
 	public static final String PATTERN_NUMBERS= "^\\d+$";
-	public static final String PATTERN_PASSWORD = "^[A-Za-z0-9@.]+$";
+	public static final String PATTERN_PASSWORD = "^[A-Za-z0-9ñÑ@.]+$";
 
 //______________________________________________________________________________________________
 

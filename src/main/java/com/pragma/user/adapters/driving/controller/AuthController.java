@@ -28,7 +28,7 @@ public class AuthController {
 			description = SpringDocConstants.OPERATION_DESCRIPTION_LOGIN,
 			tags = {"Login"}
 	)
-	public ResponseEntity<AuthResponse> register(@RequestBody @Valid AuthRequest authRequest) {
+	public ResponseEntity<AuthResponse> login(@RequestBody @Valid AuthRequest authRequest) {
 		return ResponseEntity.ok(authHandler.login(authRequest));
 	}
 
