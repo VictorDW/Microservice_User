@@ -17,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
@@ -33,6 +34,9 @@ class UserUseCaseTest {
 
 	@Mock
 	private IRolPersistencePort rolPersistencePort;
+
+	@Mock
+	private Supplier<String> roleSupplier;
 
 	private User userWithoutRole;
 	private User userWithRole;
@@ -57,7 +61,7 @@ class UserUseCaseTest {
 		given(userPersistencePort.verifyUserByEmail("test 2")).willReturn(Optional.of(userWithRole));
 
 		//WHEN - THEN
-		assertThrows(AlreadyExistException.class, () -> userUseCase.register(userWithRole));
+		assertThrows(AlreadyExistException.class, () -> userUseCase.register(userWithRole, false));
 	}
 
 	@Test
@@ -72,7 +76,7 @@ class UserUseCaseTest {
 		given(rolPersistencePort.getRoleByName(Role.DEFAULT_ADMIN_ROL)).willReturn(Optional.of(role));
 
 	//WHEN
-		userUseCase.register(userWithoutRole);
+		userUseCase.register(userWithoutRole, true);
 
 	//THEN
 		assertAll(
@@ -92,9 +96,10 @@ class UserUseCaseTest {
 								.rol("TUTOR")
 								.build();
 		given(rolPersistencePort.getRoleById(idRol)).willReturn(Optional.of(response));
+		given(roleSupplier.get()).willReturn(TypeRole.ADMIN.name());
 
 		//WHEN
-		userUseCase.register(userWithRole);
+		userUseCase.register(userWithRole, false);
 
 		//THEN
 		assertAll(
@@ -112,7 +117,7 @@ class UserUseCaseTest {
 		given(rolPersistencePort.getRoleByName(Role.DEFAULT_ADMIN_ROL)).willReturn(Optional.empty());
 
 		//WHEN - THEN
-		assertThrows(NotFoundException.class, () -> userUseCase.register(userWithoutRole));
+		assertThrows(NotFoundException.class, () -> userUseCase.register(userWithoutRole, true));
 	}
 
 	@Test
@@ -126,9 +131,10 @@ class UserUseCaseTest {
 				.build();
 
 		given(rolPersistencePort.getRoleById(role.getId())).willReturn(Optional.of(role));
+		given(roleSupplier.get()).willReturn(TypeRole.ADMIN.name());
 
 		//WHEN
-		userUseCase.register(userWithRole);
+		userUseCase.register(userWithRole, false);
 
 		//THEN
 		verify(userPersistencePort, times(1)).saveUser(userWithRole);
