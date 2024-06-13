@@ -95,7 +95,7 @@ public class UserUseCase implements IUserServicePort {
         new NotFoundException(
             String.format(
                 DomainConstants.NOT_FOUND_MESSAGE,
-                DomainConstants.Class.ROLE.name()));
+                DomainConstants.Class.ROL.name().toLowerCase()));
   }
 
 

@@ -16,7 +16,7 @@ public class Constants {
 	public static final String FIELD_EMPTY_MESSAGE = "El campo no puede estar vacío";
 	public static final String FIELD_NOT_NULL_MESSAGE = "No debe ser nulo";
 	public static final String ONLY_LETTERS_MESSAGE = "Sólo se admiten letras";
-	public static final String ONLY_NUMBERS_MESSAGE = "Sólo se admiten numeros";
+	public static final String ONLY_NUMBERS_MESSAGE = "Sólo se admiten números";
 	public static final String DEFAULT_SIZE_MESSAGE = "Debe contener un mínimo de 4 caracteres y un máximo de 50 caracteres";
 	public static final String DNI_SIZE_MESSAGE = "Debe contener un mínimo de 8 dígitos y un máximo de 11 dígitos";
 	public static final String CELLPHONE_SIZE_MESSAGE = "Error en el formato del número de teléfono";
