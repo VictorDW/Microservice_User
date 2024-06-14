@@ -40,7 +40,4 @@ public class UserPersistenceAdapter implements IUserPersistencePort {
 		return !verifyUserByRol.isEmpty();
 	}
 
-
-
-
 }
