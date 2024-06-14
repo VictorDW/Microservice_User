@@ -22,10 +22,6 @@ public class User {
     this.password = builder.password;
   }
 
-  public static BuilderUser builder() {
-    return null;
-  }
-
   public String getPassword() {
     return password;
   }
